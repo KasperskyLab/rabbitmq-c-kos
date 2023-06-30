@@ -1,0 +1,292 @@
+/*
+ * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * Licensed under the MIT License
+ */
+
+/* Security configuration for "amqp consumer" example. */
+
+/* Definition of execute-interface. */
+execute: kl.core.Execute
+
+/* Import basic security policies declarations. */
+use nk.base._
+
+/* This code includes EDL descriptions of provided by SDK entities. */
+use EDL Einit
+use EDL kl.core.Core
+use EDL kl.VfsSdCardFs
+use EDL kl.VfsNet
+use EDL kl.rump.Dhcpcd
+use EDL kl.Ntpd
+
+/* Platform-specific EDL descriptions. */
+use EDL kl.drivers.SDCard
+use EDL kl.drivers.BSP
+use EDL kl.drivers.GPIO
+
+/* EDL descriptions of external (non-provided by SDK) entities. */
+use EDL amqp.Consumer
+
+/* Return of errors is allowed */
+error {
+    grant ()
+}
+
+/**
+ * This policy enables to start up system entities by KOS kernel.
+ */
+execute src = kl.core.Core
+{
+    match dst = kl.core.Core { grant() }
+    match dst = Einit { grant() }
+}
+
+/**
+ * These instructions enables to start up and initialize entities specified in file init.yaml.in.
+ */
+execute src = Einit
+{
+    match dst = amqp.Consumer { grant() }
+
+    match dst = kl.rump.Dhcpcd { grant() }
+    match dst = kl.Ntpd { grant() }
+    match dst = kl.VfsSdCardFs { grant() }
+    match dst = kl.VfsNet { grant() }
+
+    match dst = kl.drivers.BSP { grant() }
+    match dst = kl.drivers.GPIO { grant() }
+    match dst = kl.drivers.SDCard { grant() }
+}
+
+/**
+ * This code enables to send requests from BSP entity to KOS kernel
+ * and get responses.
+ */
+request src = kl.drivers.BSP, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = kl.drivers.BSP
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from GPIO entity to KOS kernel
+ * and get responses.
+ */
+request src = kl.drivers.GPIO, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = kl.drivers.GPIO
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Einit entity to KOS kernel
+ * and get responses. It makes able to use system calls by Einit.
+ */
+request src = Einit, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = Einit
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Dhcpcd entity to KOS kernel
+ * and get responses.
+ */
+request src = kl.rump.Dhcpcd, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = kl.rump.Dhcpcd
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Ntpd entity to KOS kernel
+ * and get responses.
+ */
+request src = kl.Ntpd, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = kl.Ntpd
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from VfsNet entity to KOS kernel
+ * and get responses.
+ */
+request src = kl.VfsNet, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = kl.VfsNet
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from VfsSdCardFs entity to KOS kernel
+ * and get responses.
+ */
+request src = kl.VfsSdCardFs, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = kl.VfsSdCardFs
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Consumer entity to KOS kernel
+ * and get responses.
+ */
+request src = amqp.Consumer, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = amqp.Consumer
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Consumer entity to VfsSdCardFs entity
+ * and get responses.
+ */
+request src = amqp.Consumer, dst = kl.VfsSdCardFs
+{
+    grant()
+}
+
+response src = kl.VfsSdCardFs, dst = amqp.Consumer
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from VfsSdCardFs entity to SDCard entity
+ * and get responses.
+ */
+request src = kl.VfsSdCardFs, dst = kl.drivers.SDCard
+{
+    grant()
+}
+
+response src = kl.drivers.SDCard, dst = kl.VfsSdCardFs
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Consumer entity to VfsNet entity
+ * and get responses.
+ */
+request src = amqp.Consumer, dst = kl.VfsNet
+{
+    grant()
+}
+
+response src = kl.VfsNet, dst = amqp.Consumer
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Dhcpcd entity to VfsNet entity
+ * and get responses.
+ */
+request src = kl.rump.Dhcpcd, dst = kl.VfsNet
+{
+    grant()
+}
+
+response src = kl.VfsNet, dst = kl.rump.Dhcpcd
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from SDCard entity to KOS kernel
+ * and get responses.
+ */
+request src = kl.drivers.SDCard, dst = kl.core.Core
+{
+    grant()
+}
+
+response src = kl.core.Core, dst = kl.drivers.SDCard
+{
+    grant()
+}
+
+/**
+ * This code enables to call methods of the security interface.
+ */
+
+security src = kl.drivers.SDCard, method = Register
+{
+    grant ()
+}
+
+/**
+ * This code enables to send requests from Dhcpcd entity to VfsSdCardFs entity
+ * and get responses.
+ */
+request src = kl.rump.Dhcpcd, dst = kl.VfsSdCardFs
+{
+    grant()
+}
+
+response src = kl.VfsSdCardFs, dst = kl.rump.Dhcpcd
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Ntpd entity to VfsNet entity
+ * and get responses.
+ */
+request src = kl.Ntpd, dst = kl.VfsNet
+{
+    grant()
+}
+
+response src = kl.VfsNet, dst = kl.Ntpd
+{
+    grant()
+}
+
+/**
+ * This code enables to send requests from Ntpd entity to VfsSdCardFs entity
+ * and get responses.
+ */
+request src = kl.Ntpd, dst = kl.VfsSdCardFs
+{
+    grant()
+}
+
+response src = kl.VfsSdCardFs, dst = kl.Ntpd
+{
+    grant()
+}

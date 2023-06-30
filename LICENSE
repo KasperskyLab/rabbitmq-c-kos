@@ -1,5 +1,10 @@
 MIT License
 
+KasperskyOS modification is
+© 2023 AO Kaspersky Lab. All Rights Reserved.
+
+The original RabbitMQ-C AMQP client library is:
+
 Copyright (c) 2012-2021 Alan Antonuk
 
 Copyright (c) 2007-2012 VMware, Inc.

@@ -1,0 +1,35 @@
+# © 2023 AO Kaspersky Lab. All Rights Reserved
+# Licensed under the MIT License
+
+entities:
+
+- name: amqp.Consumer
+  env:
+    VFS_FILESYSTEM_BACKEND: client:@ROOTFS_ENTITY@
+    VFS_NETWORK_BACKEND: client:kl.VfsNet
+    AMQP_BROKER_ADDRESS: 10.0.2.2
+    AMQP_BROKER_PORT: "5672"
+  connections:
+  - target: kl.VfsNet
+    id: kl.VfsNet
+  - target: @ROOTFS_ENTITY@
+    id: @ROOTFS_ENTITY@
+@INIT_Consumer_ENTITY_CONNECTIONS+@
+
+- name: kl.Ntpd
+  env:
+    VFS_FILESYSTEM_BACKEND: client:@ROOTFS_ENTITY@
+    VFS_NETWORK_BACKEND: client:kl.VfsNet
+  args:
+    - "-4"
+    - -c
+    - /etc/ntp.conf
+  path: ntpd
+  connections:
+  - target: kl.VfsNet
+    id: kl.VfsNet
+  - target: @ROOTFS_ENTITY@
+    id: @ROOTFS_ENTITY@
+@INIT_Ntpd_ENTITY_CONNECTIONS+@
+
+@INIT_EXTERNAL_ENTITIES@

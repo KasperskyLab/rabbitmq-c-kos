@@ -1,176 +1,79 @@
-# RabbitMQ C AMQP client library
+# KasperskyOS modification of RabbitMQ-C AMQP client library
 
-![Build Status](https://github.com/alanxz/rabbitmq-c/actions/workflows/ci.yml/badge.svg)
+>This version of the [RabbitMQ® C AMQP client library](https://github.com/alanxz/rabbitmq-c) is adapted for KasperskyOS. The project is based on a [commit](https://github.com/alanxz/rabbitmq-c/commit/974d71adceae6d742ae20a4c880d99c131f1460a) of version 0.13.0 and includes two examples: an AMQP consumer and an AMQP publisher.
 
-[![Coverage Status](https://coveralls.io/repos/github/alanxz/rabbitmq-c/badge.svg?branch=master)](https://coveralls.io/github/alanxz/rabbitmq-c?branch=master)
+## What is a RabbitMQ-C AMQP client library for KasperskyOS?
 
-## Introduction
+The RabbitMQ-C AMQP client library for KasperskyOS provides the ability to send and receive messages between programs using a RabbitMQ message broker as an intermediary. For more information about RabbitMQ, see [RabbitMQ](https://www.rabbitmq.com/).
 
-This is a C-language AMQP client library for use with v2.0+ of the
-[RabbitMQ](http://www.rabbitmq.com/) broker.
+Communication between the RabbitMQ-C AMQP library and the RabbitMQ message broker is based on an Advanced Message Queuing Protocol (AMQP). For more information about AMQP, see [AMQP version 0.9.1](https://www.amqp.org/specification/0-9-1/amqp-org-download).
 
- - <http://github.com/alanxz/rabbitmq-c>
+For more information about KasperskyOS, please refer to the [KasperskyOS Community Edition Online Help](https://support.kaspersky.com/help/KCE/1.1/en-US/community_edition.htm).
 
-Announcements regarding the library are periodically made on the
-rabbitmq-c-users and cross-posted to rabbitmq-users.
+The RabbitMQ-C AMQP client library has a limitation. This implementation supports only AMQP version 0.9.1.
 
- - <https://groups.google.com/forum/#!forum/rabbitmq-c-users>
- - <https://groups.google.com/forum/#!forum/rabbitmq-users>
+Other limitations and known issues are described in the [KasperskyOS Community Edition Online Help](https://support.kaspersky.ru/help/KCE/1.1/en-US/limitations_and_known_problems.htm).
 
-## Latest Stable Version
+## Table of contents
 
-The latest stable release of rabbitmq-c can be found at:
-
- - <https://github.com/alanxz/rabbitmq-c/releases/latest>
-
-## Documentation
-
-API documentation for v0.8.0+ can viewed from:
-
-<http://alanxz.github.io/rabbitmq-c/docs/0.8.0/>
+- [RabbitMQ-C AMQP client library for KasperskyOS](#rabbitmq-c-amqp-client-library-for-kasperskyos)
+  - [What is a RabbitMQ-C AMQP client library for KasperskyOS?](#what-is-a-rabbitmq-c-amqp-client-library-for-kasperskyos)
+  - [Table of contents](#table-of-contents)
+  - [Getting started](#getting-started)
+    - [Prerequisites](#prerequisites)
+  - [Usage](#usage)
+    - [Examples](#examples)
+  - [Contributing](#contributing)
+  - [Licensing](#licensing)
 
 ## Getting started
 
-### Building and installing
+### Prerequisites
 
-#### Prereqs:
-- [CMake v3.12 or better](http://www.cmake.org/)
-- A C compiler (GCC 4.4+, clang, and MSVC are test. Other compilers may also
-  work)
-- *Optionally* [OpenSSL](http://www.openssl.org/) v1.1.1+ to enable support for
-  connecting to RabbitMQ over SSL/TLS
-- *Optionally* [POpt](http://freecode.com/projects/popt) to build some handy
-  command-line tools.
-- *Optionally* [XmlTo](https://fedorahosted.org/xmlto/) to build man pages for
-  the handy command-line tools
-- *Optionally* [Doxygen](http://www.stack.nl/~dimitri/doxygen/) to build
-  developer API documentation.
+1. [Install](https://support.kaspersky.com/help/KCE/1.1/en-US/sdk_install_and_remove.htm) the KasperskyOS Community Edition SDK. You can download the latest version of the KasperskyOS Community Edition for free from [os.kaspersky.com](https://os.kaspersky.com/development/). Minimum required version of the KasperskyOS Community Edition SDK is 1.1.1.13. For more information, see [System requirements](https://support.kaspersky.com/help/KCE/1.1/en-US/system_requirements.htm).
+1. Copy project sources files to your home directory. Examples of KasperskyOS-based solutions are located in the following directory:
+   ```
+   ./kos
+   ```
 
-After downloading and extracting the source from a tarball to a directory
-([see above](#latest-stable-version)), the commands to build rabbitmq-c on most
-systems are:
+[⬆ Back to Top](#Table-of-contents)
 
-    mkdir build && cd build
-    cmake ..
-    cmake --build . [--config Release]
+## Usage
 
-The --config Release flag should be used in multi-configuration generators e.g.,
-Visual Studio or XCode.
+When you develop a KasperskyOS-based solution, use the [recommended structure of project directories](https://support.kaspersky.com/help/KCE/1.1/en-US/cmake_using_sdk_cmake.htm) to simplify usage of CMake scripts.
 
-It is also possible to point the CMake GUI tool at the CMakeLists.txt in the root of
-the source tree and generate build projects or IDE workspace
+To include the RabbitMQ-C AMQP client library in your KasperskyOS-based solution, follow these steps:
 
-Installing the library and optionally specifying a prefix can be done with:
+1. Build the library using the CMake module `ExternalProject`.
+1. Use CMake command `target_include_directories()` to specify the paths to the header file directories.
+1. Link the built library to your program using CMake command `target_link_libraries()`. Examples of implementing this approach are shown in the files: [`./kos/amqp_consumer/consumer/CMakeLists.txt`](kos/amqp_consumer/consumer/CMakeLists.txt) and [`./kos/amqp_publisher/publisher/CMakeLists.txt`](kos/amqp_publisher/publisher/CMakeLists.txt).
+1. Add the required header files to your code file to enable calls to library functions:
+   ```
+   #include <amqp.h>
+   #include <amqp_framing.h>
+   #include <amqp_tcp_socket.h>
+   ...
+   ```
 
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
-    cmake --build . [--config Release] --target install
+### Examples
 
-More information on CMake can be found on its FAQ (http://www.cmake.org/Wiki/CMake_FAQ)
+* [`./kos/amqp_consumer`](kos/amqp_consumer)—Example of developing a solution that is an implementation of the AMQP consumer.
+* [`./kos/amqp_publisher`](kos/amqp_publisher)—Example of developing a solution that is an implementation of the AMQP publisher.
 
-Other interesting flags that can be passed to CMake:
+[⬆ Back to Top](#Table-of-contents)
 
-* `BUILD_EXAMPLES=ON/OFF` toggles building the examples. ON by default.
-* `BUILD_SHARED_LIBS=ON/OFF` toggles building rabbitmq-c as a shared library.
-   ON by default.
-* `BUILD_STATIC_LIBS=ON/OFF` toggles building rabbitmq-c as a static library.
-   OFF by default.
-* `BUILD_TESTING=ON/OFF` toggles building test code. ON by default.
-* `BUILD_TOOLS=ON/OFF` toggles building the command line tools. By default
-   this is ON if the build system can find the POpt header and library.
-* `BUILD_TOOLS_DOCS=ON/OFF` toggles building the man pages for the command line
-   tools. By default this is ON if BUILD_TOOLS is ON and the build system can
-   find the XmlTo utility.
-* `ENABLE_SSL_SUPPORT=ON/OFF` toggles building rabbitmq-c with SSL support. By
-   default this is ON if the OpenSSL headers and library can be found.
-* `BUILD_API_DOCS=ON/OFF` - toggles building the Doxygen API documentation, by
-   default this is OFF
-* `RUN_SYSTEM_TESTS=ON/OFF` toggles building the system tests (i.e. tests requiring 
-   an accessible RabbitMQ server instance on localhost), by default this is OFF
+## Trademarks
 
-## Building RabbitMQ - Using vcpkg
+RabbitMQ® is a trademark of VMware, Inc. in the U.S. and other countries.
 
-You can download and install RabbitMQ using the [vcpkg](https://github.com/Microsoft/vcpkg) 
-dependency manager:
+## Contributing
 
-    git clone https://github.com/Microsoft/vcpkg.git
-    cd vcpkg
-    ./bootstrap-vcpkg.sh
-    ./vcpkg integrate install
-    ./vcpkg install librabbitmq
+Only KasperskyOS-specific changes can be approved. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions on code contribution.
 
-The RabbitMQ port in vcpkg is kept up to date by Microsoft team members and 
-community contributors. If the version is out of date, 
-please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
+[⬆ Back to Top](#Table-of-contents)
 
-## Running the examples
+## Licensing
 
-Arrange for a RabbitMQ or other AMQP server to be running on
-`localhost` at TCP port number 5672.
+This project is licensed under the terms of the MIT license. See [LICENSE](LICENSE) for more information.
 
-In one terminal, run
-
-    ./examples/amqp_listen localhost 5672 amq.direct test
-
-In another terminal,
-
-    ./examples/amqp_sendstring localhost 5672 amq.direct test "hello world"
-
-You should see output similar to the following in the listener's
-terminal window:
-
-    Delivery 1, exchange amq.direct routingkey test
-    Content-type: text/plain
-    ----
-    00000000: 68 65 6C 6C 6F 20 77 6F : 72 6C 64                 hello world
-    0000000B:
-
-## Writing applications using `librabbitmq`
-
-Please see the `examples` directory for short examples of the use of
-the `librabbitmq` library.
-
-### Threading
-
-You cannot share a socket, an `amqp_connection_state_t`, or a channel
-between threads using `librabbitmq`. The `librabbitmq` library is
-built with event-driven, single-threaded applications in mind, and
-does not yet cater to any of the requirements of `pthread`ed
-applications.
-
-Your applications instead should open an AMQP connection (and an
-associated socket, of course) per thread. If your program needs to
-access an AMQP connection or any of its channels from more than one
-thread, it is entirely responsible for designing and implementing an
-appropriate locking scheme. It will generally be much simpler to have
-a connection exclusive to each thread that needs AMQP service.
-
-### License & Copyright
-
-Portions created by Alan Antonuk are Copyright (c) 2012-2021
-Alan Antonuk. All Rights Reserved.
-
-Portions created by VMware are Copyright (c) 2007-2012 VMware, Inc.
-All Rights Reserved.
-
-Portions created by Tony Garnock-Jones are Copyright (c) 2009-2010
-VMware, Inc. and Tony Garnock-Jones. All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use, copy,
-modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+[⬆ Back to Top](#Table-of-contents)

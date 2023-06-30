@@ -1,4 +1,5 @@
 // Copyright 2007 - 2021, Alan Antonuk and the rabbitmq-c contributors.
+// © 2023 AO Kaspersky Lab. All Rights Reserved
 // SPDX-License-Identifier: mit
 
 #ifdef HAVE_CONFIG_H
@@ -121,8 +122,8 @@ int amqp_socket_close(amqp_socket_t *self, amqp_socket_close_enum force) {
 
 void amqp_socket_delete(amqp_socket_t *self) {
   if (self) {
-    assert(self->klass->delete);
-    self->klass->delete (self);
+    assert(self->klass->delete_sock);
+    self->klass->delete_sock(self);
   }
 }
 

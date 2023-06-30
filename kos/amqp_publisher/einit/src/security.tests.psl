@@ -1,0 +1,38 @@
+/*
+ * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * Licensed under the MIT License
+ */
+
+execute: kl.core.Execute
+
+use nk.base._
+use external._
+use internal._
+
+/* Platform-specific EDL descriptions. */
+use EDL kl.drivers.SDCard
+use EDL kl.drivers.BSP
+use EDL kl.drivers.GPIO
+
+/* EDL descriptions of TestEntity. */
+use EDL amqp.TestEntity
+
+/* Entity execution is allowed */
+execute {
+    grant ()
+}
+
+/* Request type messages allowed */
+request {
+    grant ()
+}
+
+/* Response type messages allowed */
+response {
+    grant ()
+}
+
+/* Calls to the security interface are ignored */
+security {
+    grant ()
+}

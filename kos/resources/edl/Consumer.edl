@@ -1,0 +1,6 @@
+/*
+ * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * Licensed under the MIT License
+ */
+
+entity amqp.Consumer

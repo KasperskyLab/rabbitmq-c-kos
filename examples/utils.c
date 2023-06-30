@@ -1,5 +1,6 @@
 // Copyright 2007 - 2021, Alan Antonuk and the rabbitmq-c contributors.
 // SPDX-License-Identifier: mit
+// © 2023 AO Kaspersky Lab. All Rights Reserved
 
 #include <ctype.h>
 #include <stdarg.h>
@@ -18,7 +19,7 @@ void die(const char *fmt, ...) {
   va_start(ap, fmt);
   vfprintf(stderr, fmt, ap);
   va_end(ap);
-  fprintf(stderr, "\n");
+  fprintf(stderr, ".\n");
   exit(1);
 }
 

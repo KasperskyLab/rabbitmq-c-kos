@@ -1,26 +1,11 @@
-Contributing to rabbitmq-c
-==========================
+# Сode contribution workflow
 
-Thanks for contributing to rabbitmq-c. I firmly believe that participation helps
-make open source software great. With that there are a few things that can be
-done to make our interaction a bit smoother.
-
-Please use the following guidelines when creating an issue or submitting a 
-pull request
-
-Creating an issue
------------------
-When submitting an issue its helpful to know the following
- - What version of rabbitmq-c are you using?
- - What operating system and version are you running on?
- - What compiler and version are you running?
- -
- - If its a build system issue: which build system are you using (
-
-
-Submitting a pull-request
--------------------------
-I love to get code contributions, a few things that can help out:
- - Make sure your commits are rebased on the current master branch
- - Please collapse your commits down to a couple logical commits
-
+1.	Find an open issue or create a new issue on issue tracker for the feature you want to contribute. 
+2.	Fork the project on GitHub. You need to create a feature-branch for your work on your fork, as this way you be able to submit a pull request.
+3.	Make any necessary changes to the source code.
+4.	Add tests that verify that your contribution works as expected and modify existing tests if required.
+5.	Run all tests and make sure all of them pass.
+6.	Run code coverage to check if the lines of code you added are covered by unit tests.
+7.	Once your feature is complete, prepare the commit with appropriate message and the issue number.
+8.	**Create a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) and wait for the users to review. When you submit a pull request, please, agree to the terms of [CLA](CLA.md).**
+9.	Once everything is done, your pull request gets merged. Your feature will be available with the next release and your name will be added to AUTHORS.

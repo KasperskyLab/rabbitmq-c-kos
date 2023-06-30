@@ -1,4 +1,5 @@
 // Copyright 2007 - 2021, Alan Antonuk and the rabbitmq-c contributors.
+// © 2023 AO Kaspersky Lab. All Rights Reserved
 // SPDX-License-Identifier: mit
 
 /**
@@ -43,7 +44,7 @@ struct amqp_socket_class_t {
   amqp_socket_open_fn open;
   amqp_socket_close_fn close;
   amqp_socket_get_sockfd_fn get_sockfd;
-  amqp_socket_delete_fn delete;
+  amqp_socket_delete_fn delete_sock;
 };
 
 /** Abstract base class for amqp_socket_t */
