@@ -3,6 +3,8 @@
 # © 2024 AO Kaspersky Lab
 # Licensed under the MIT License
 
+set -e
+
 usage() {
     echo "Usage: $0 <TARGET> [SDK_PATH] "
     echo ""
@@ -81,6 +83,7 @@ fi
       -D CMAKE_INSTALL_PREFIX:STRING="$INSTALL_PREFIX" \
       -D BOARD:STRING="RPI4_BCM2711" \
       -D CMAKE_EXTERNAL_PREFIX:STRING="$PWD/../.." \
-      -D CMAKE_FIND_ROOT_PATH="$([[ -f "$SCRIPT_DIR/additional_cmake_find_root.txt" ]] && cat "$SCRIPT_DIR/additional_cmake_find_root.txt")$PREFIX_DIR/sysroot-$TARGET" \
+      -D CMAKE_FIND_ROOT_PATH="$PREFIX_DIR/sysroot-$TARGET" \
       -D CMAKE_TOOLCHAIN_FILE="$SDK_PREFIX/toolchain/share/toolchain-$TARGET$TOOLCHAIN_SUFFIX.cmake" \
-      "$SCRIPT_DIR/" && "$SDK_PREFIX/toolchain/bin/cmake" --build "$BUILD" --target $TARGET_PLATFORM
+      "$SCRIPT_DIR/" && \
+"$SDK_PREFIX/toolchain/bin/cmake" --build "$BUILD" --target $TARGET_PLATFORM

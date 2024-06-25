@@ -1,48 +1,43 @@
-# © 2023 AO Kaspersky Lab. All Rights Reserved
+# © 2024 AO Kaspersky Lab
 # Licensed under the MIT License
 
-cmake_minimum_required (VERSION 3.12)
+project(publisher)
 
-include (platform/nk)
+find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
 
-find_package (OpenSSL REQUIRED)
-find_package (Threads REQUIRED)
+include(FetchContent)
 
-include (ExternalProject)
+FetchContent_Declare(rabbitmq SOURCE_DIR ${CMAKE_EXTERNAL_PREFIX})
+FetchContent_MakeAvailable(rabbitmq)
 
-ExternalProject_Add (rabbitmq-c
-  PREFIX         rabbitmq-c
-  INSTALL_COMMAND ""
-  SOURCE_DIR     ${CMAKE_EXTERNAL_PREFIX}
-  CMAKE_ARGS     -DBUILD_EXAMPLES:BOOL=OFF
-                 -DBUILD_TOOLS:BOOL=OFF
-                 -DBUILD_SHARED_LIBS:BOOL=OFF
-                 -DBUILD_STATIC_LIBS:BOOL=ON
-                 -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
+if(PLATFORM_SUPPORTS_DYNAMIC_LINKING)
+  set(RABBITMQ_LIB rabbitmq::rabbitmq)
+else()
+  set(RABBITMQ_LIB rabbitmq::rabbitmq-static)
+endif()
 
-set (rabbitmq-c_BUILD_PATH
-      ${CMAKE_CURRENT_BINARY_DIR}/rabbitmq-c/src/rabbitmq-c-build)
+nk_build_edl_files(publisher_edl_files
+  NK_MODULE "amqp"
+  EDL ${RESOURCES}/edl/Publisher.edl
+  )
 
-set (rabbitmq-c_LIBRARIES 
-      ${rabbitmq-c_BUILD_PATH}/librabbitmq/librabbitmq${CMAKE_STATIC_LIBRARY_SUFFIX})
+add_executable(Publisher
+  src/main.cpp
+  src/publisher.cpp
+  ${UTILS}/utils.cpp
+  )
 
-add_executable (Publisher 
-                src/main.cpp
-                src/publisher.cpp
-                ${CMAKE_SOURCE_DIR}/../utils/utils.cpp)
+target_compile_features(Publisher PUBLIC cxx_std_17)
+target_compile_options(Publisher PUBLIC -fexceptions)
 
-target_compile_features (Publisher PUBLIC cxx_std_17)
-target_compile_options (Publisher PUBLIC "-fexceptions")
-
-add_dependencies (Publisher publisher_edl_files rabbitmq-c)
-target_include_directories (Publisher PUBLIC
-                            ${CMAKE_SOURCE_DIR}/../utils
-                            ${CMAKE_EXTERNAL_PREFIX}/include
-                            ${rabbitmq-c_BUILD_PATH}/include)
+add_dependencies(Publisher publisher_edl_files)
+target_include_directories(Publisher PUBLIC ${UTILS})
 
 target_link_libraries(Publisher
-                      ${vfs_CLIENT_LIB}
-                      ${rabbitmq-c_LIBRARIES}
-                      ${CMAKE_THREAD_LIBS_INIT})
+  ${vfs_CLIENT_LIB}
+  ${RABBITMQ_LIB}
+  ${CMAKE_THREAD_LIBS_INIT}
+  )
 
-set_target_properties (Publisher PROPERTIES ${vfs_ENTITY}_REPLACEMENT "")
+set_target_properties(Publisher PROPERTIES ${vfs_ENTITY}_REPLACEMENT "")

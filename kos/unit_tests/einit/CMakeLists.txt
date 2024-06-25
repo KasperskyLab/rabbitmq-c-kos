@@ -9,7 +9,7 @@ include(platform/image)
 include(${KL_SDK_ROOT_PATH}/common/build-sd-image.cmake)
 
 # Set the linker and compiler flags.
-project_header_default("STANDARD_GNU_11:YES" "STRICT_WARNINGS:NO")
+project_header_default("STANDARD_GNU_11:YES" "STRICT_WARNINGS:YES")
 
 find_program(NTPD_ENTITY
   NAMES "ntpd" REQUIRED
@@ -20,47 +20,36 @@ find_program(NTPD_ENTITY
 
 # Define an ENTITIES variable with a list of programs.
 set(ENTITIES
+  TestEntity
   ${NTPD_ENTITY}
   ${precompiled_vfsVfsNet}
+  ${precompiled_vfsVfsSdCardFs}
   ${rump_DHCPCD_ENTITY}
-  Publisher
   )
-
 
 set(YAML_FILE "src/init.yaml.in")
 set(SECURITY_PSL_FILE "src/security.psl.in")
 set(IMAGE_FS "${CMAKE_BINARY_DIR}/hdd")
 set(LIBS_PATH "${IMAGE_FS}/lib")
 set(ROOTFS_IMAGE "sdcard0.img")
-set(ROOTFS_ENTITY "kl.VfsSdCardFs")
-set(FS_BACKEND ${precompiled_vfsVfsSdCardFs})
 set(QEMU_FLAGS "-drive file=${ROOTFS_IMAGE},if=sd,format=raw")
 set(QEMU_DEPENDENCIES ${ROOTFS_IMAGE})
+
 # Add hosts file to romfs image, to be used by application.
 set(FILES ${RESOURCES}/rootfs/etc/hosts)
-
-list(APPEND ENTITIES ${FS_BACKEND})
-
-if(PLATFORM_SUPPORTS_DYNAMIC_LINKING)
-  set_target_properties(${blob_container_ENTITY} PROPERTIES
-    ${vfs_ENTITY}_REPLACEMENT ""
-    DEPENDS_ON_ENTITY ${precompiled_vfsVfsSdCardFs}
-    EXTRA_ENV "    VFS_FILESYSTEM_BACKEND: client:kl.VfsSdCardFs"
-    )
-endif()
 
 set(EXTRA_CONNECTIONS
 "  - target: kl.VfsNet
     id: kl.VfsNet
-  - target: ${ROOTFS_ENTITY}
-    id: ${ROOTFS_ENTITY}"
+  - target: kl.VfsSdCardFs
+    id: kl.VfsSdCardFs"
   )
 
 set_target_properties(${rump_DHCPCD_ENTITY} PROPERTIES
   DEPENDS_ON_ENTITY ""
   EXTRA_CONNECTIONS ${EXTRA_CONNECTIONS}
   EXTRA_ENV "\
-    VFS_FILESYSTEM_BACKEND: client{fs->net}:${ROOTFS_ENTITY}
+    VFS_FILESYSTEM_BACKEND: client{fs->net}:kl.VfsSdCardFs
     VFS_NETWORK_BACKEND: client:kl.VfsNet"
   EXTRA_ARGS "\
     - '-4'
@@ -68,7 +57,7 @@ set_target_properties(${rump_DHCPCD_ENTITY} PROPERTIES
     - /etc/dhcpcd.conf"
   )
 
-set_target_properties(${FS_BACKEND} PROPERTIES
+set_target_properties(${precompiled_vfsVfsSdCardFs} PROPERTIES
   EXTRA_ARGS "\
     - -l
     - romfs /romfs romfs ro
@@ -93,7 +82,7 @@ add_custom_target(disk_image_fs
 
 # Add a target to create disk image.
 add_custom_target(${ROOTFS_IMAGE}
-  DEPENDS disk_image_fs copylibs_qemu
+  DEPENDS disk_image_fs
   COMMAND ${KL_SDK_ROOT_PATH}/common/prepare_hdd_img.sh -d ${IMAGE_FS} -s 64 -f fat32 -img ${ROOTFS_IMAGE}
   )
 
@@ -103,13 +92,10 @@ build_kos_hw_image(kos-image
   EINIT_ENTITY EinitHw
   CONNECTIONS_CFG ${YAML_FILE}
   SECURITY_PSL ${SECURITY_PSL_FILE}
-  PACK_DEPS_COPY_ONLY ON
-  PACK_DEPS_LIBS_PATH ${LIBS_PATH}
-  PACK_DEPS_COPY_TARGET copylibs_hw
   IMAGE_FILES ${ENTITIES} ${FILES}
   )
 
-add_dependencies(kos-image disk_image_fs copylibs_hw)
+add_dependencies(kos-image disk_image_fs)
 
 # Create a top-level CMake target named sd-image which can be used
 # when building an SD card image to be started on the hardware platform.
@@ -123,11 +109,8 @@ build_sd_image(sd-image
 build_kos_qemu_image(kos-qemu-image
   EINIT_ENTITY EinitQemu
   CONNECTIONS_CFG ${YAML_FILE}
-  SECURITY_PSL ${SECURITY_PSL_FILE}
+  SECURITY_PSL  ${SECURITY_PSL_FILE}
   QEMU_FLAGS "${QEMU_FLAGS}"
   QEMU_DEPENDENCIES ${QEMU_DEPENDENCIES}
-  PACK_DEPS_COPY_ONLY ON
-  PACK_DEPS_LIBS_PATH ${LIBS_PATH}
-  PACK_DEPS_COPY_TARGET copylibs_qemu
   IMAGE_FILES ${ENTITIES} ${FILES}
   )

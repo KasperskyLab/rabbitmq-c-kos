@@ -1,6 +1,6 @@
 // Copyright 2007 - 2021, Alan Antonuk and the rabbitmq-c contributors.
-// © 2023 AO Kaspersky Lab. All Rights Reserved
 // SPDX-License-Identifier: mit
+// © 2023 AO Kaspersky Lab
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

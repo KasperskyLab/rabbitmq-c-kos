@@ -1,19 +1,19 @@
+# © 2023 AO Kaspersky Lab
+# Licensed under the MIT License
+#
 # /etc/hosts: Local Host Database
 #
-# This file describes a number of aliases-to-address mappings for the for 
+# This file describes a number of aliases-to-address mappings for the
 # local hosts that share this file.
 #
 # The format of lines in this file is:
 #
 # IP_ADDRESS	canonical_hostname	[aliases...]
 #
-#The fields can be separated by any number of spaces or tabs.
+# The fields can be separated by any number of spaces or tabs.
 #
-# In the presence of the domain name service or NIS, this file may not be 
+# In the presence of the domain name service or NIS, this file may not be
 # consulted at all; see /etc/host.conf for the resolution order.
-#
-# © 2023 AO Kaspersky Lab. All Rights Reserved
-# Licensed under the MIT License
 
 # IPv4 and IPv6 localhost aliases
 127.0.0.1	localhost

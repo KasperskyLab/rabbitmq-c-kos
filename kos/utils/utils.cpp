@@ -1,5 +1,5 @@
 /*
- * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * © 2023 AO Kaspersky Lab
  * Licensed under the MIT License
  */
 
@@ -61,10 +61,10 @@ void ThrowOnAmqpError(amqp_rpc_reply_t x, std::string context)
                 {
                     amqp_connection_close_t *m = (amqp_connection_close_t *)x.reply.decoded;
 
-                    throw std::runtime_error(context + ": server connection error " + 
+                    throw std::runtime_error(context + ": server connection error " +
                           std::to_string(m->reply_code) + "h, message: " +
                           std::string{
-                            static_cast<char *>(m->reply_text.bytes), 
+                            static_cast<char *>(m->reply_text.bytes),
                             m->reply_text.len
                           }
                     );
@@ -72,17 +72,17 @@ void ThrowOnAmqpError(amqp_rpc_reply_t x, std::string context)
                 case AMQP_CHANNEL_CLOSE_METHOD:
                 {
                     amqp_channel_close_t *m = (amqp_channel_close_t *)x.reply.decoded;
-                    throw std::runtime_error(context + ": server channel error " + 
+                    throw std::runtime_error(context + ": server channel error " +
                           std::to_string(m->reply_code) + "h, message: " +
                           std::string{
-                            static_cast<char *>(m->reply_text.bytes), 
+                            static_cast<char *>(m->reply_text.bytes),
                             m->reply_text.len
                           }
                     );
                 }
                 default:
                     std::stringstream msg;
-                    msg << context << ": unknown server error, method id 0x" 
+                    msg << context << ": unknown server error, method id 0x"
                         << std::hex << std::setw(8) << std::setfill('0') << x.reply.id;
                     throw std::runtime_error(msg.str());
             }
@@ -171,8 +171,8 @@ void AmqpDump(void const *buffer, size_t len)
                 if (!showed_dots)
                 {
                     showed_dots = 1;
-                    std::cout << 
-                        "          .. .. .. .. .. .. .. .. : .. .. .. .. .. .. .. .." 
+                    std::cout <<
+                        "          .. .. .. .. .. .. .. .. : .. .. .. .. .. .. .. .."
                               << std::endl;
                 }
             }
@@ -182,7 +182,7 @@ void AmqpDump(void const *buffer, size_t len)
                 DumpRow(count, numinrow, chs);
             }
 
-            memccpy(oldchs, chs, 16, sizeof(int));            
+            memccpy(oldchs, chs, 16, sizeof(int));
             numinrow = 0;
         }
 

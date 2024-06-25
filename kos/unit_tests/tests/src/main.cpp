@@ -1,5 +1,5 @@
 /*
- * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * © 2024 AO Kaspersky Lab
  * Licensed under the MIT License
  */
 
@@ -25,12 +25,15 @@
 #include <rabbitmq-c/tcp_socket.h>
 #include <rabbitmq-c/ssl_socket.h>
 
+
 // internal
 extern "C"
 {
 #include "amqp_time.h"
 #include "amqp_table.h"
 }
+
+#include <kos_net.h>
 
 static void parseSuccess(
     const char *url,
@@ -74,7 +77,7 @@ TEST(LibRabbitMQTest, ParseUrl)
 
     parseSuccess("amqp://user%61:%61pass@ho%61st:10000/v%2fhost",
                   "usera", "apass", "hoast", 10000, "v/host");
-    
+
     parseSuccess("amqps://user%61:%61pass@ho%61st:10000/v%2fhost",
                   "usera", "apass", "hoast", 10000, "v/host");
 
@@ -880,10 +883,14 @@ TEST(LibRabbitMQTest, MergeCapabilities)
 
 int main(int argc, char **argv)
 {
-    sleep(10);
-
     ::testing::InitGoogleMock(&argc, argv);
     ::testing::InitGoogleTest(&argc, argv);
+
+    if (!wait_for_network())
+    {
+        std::cerr << "Network up failed\n";
+        return EXIT_FAILURE;
+    }
 
     return RUN_ALL_TESTS();
 }
