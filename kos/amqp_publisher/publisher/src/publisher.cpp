@@ -1,5 +1,5 @@
 /*
- * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * © 2024 AO Kaspersky Lab
  * Licensed under the MIT License
  */
 
@@ -28,7 +28,9 @@ Publisher::Publisher(const char *hostname, int port)
     m_status = amqp_socket_open(m_socket, hostname, port);
     if (m_status)
     {
-        throw std::runtime_error("Error opening TCP socket");
+        std::string errMsg("Error opening broker connection socket with address: ");
+        errMsg.append(hostname).append(" port: ").append(std::to_string(port));
+        throw std::runtime_error(errMsg);
     }
 
     utils::ThrowOnAmqpError(

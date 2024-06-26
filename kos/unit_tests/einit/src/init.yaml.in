@@ -1,17 +1,17 @@
-# © 2023 AO Kaspersky Lab. All Rights Reserved
+# © 2024 AO Kaspersky Lab
 # Licensed under the MIT License
 
 entities:
 
 - name: amqp.TestEntity
   env:
-    VFS_FILESYSTEM_BACKEND: client:@ROOTFS_ENTITY@
+    VFS_FILESYSTEM_BACKEND: client:kl.VfsSdCardFs
     VFS_NETWORK_BACKEND: client:kl.VfsNet
   connections:
   - target: kl.VfsNet
     id: kl.VfsNet
-  - target: @ROOTFS_ENTITY@
-    id: @ROOTFS_ENTITY@
+  - target: kl.VfsSdCardFs
+    id: kl.VfsSdCardFs
 @INIT_TestEntity_ENTITY_CONNECTIONS+@
 
 @INIT_EXTERNAL_ENTITIES@

@@ -1,0 +1,79 @@
+/*
+ * © 2024 AO Kaspersky Lab
+ * Licensed under the MIT License
+ */
+
+/* Description of a solution security policy. */
+
+/* Assign the execute interface. */
+execute: kl.core.Execute
+
+/* Include the base.psl file containing a formal
+ * description of the Base security model. */
+use nk.base._
+
+/* Include EDL files. */
+use EDL kl.core.Core
+use EDL Einit
+use EDL amqp.Consumer
+@INIT_EXTERNAL_ENTITIES@
+
+execute
+{
+    /* Allows the KasperskyOS kernel to start itself
+     * and the Einit class process. */
+    match src = kl.core.Core
+    {
+        match dst = kl.core.Core    { grant() }
+        match dst = Einit           { grant() }
+    }
+
+    /* An Einit class process is allowed to start
+     * a process of the amqp.Consumer class. */
+    match src = Einit
+    {
+        match dst = amqp.Consumer   { grant() }
+    }
+}
+
+/* A client of the kl.drivers.BSP, Einit, amqp.Consumer and kl.bc.BlobContainer
+ * class processes is allowed to query the KasperskyOS kernel. */
+request dst = kl.core.Core
+{
+    match src = kl.drivers.BSP      { grant() }
+    match src = Einit               { grant() }
+    match src = amqp.Consumer       { grant() }
+    match src = kl.bc.BlobContainer { grant() }
+}
+
+/* Any client in the solution is allowed to query
+ * a server of the kl.bc.BlobContainer class. */
+request dst = kl.bc.BlobContainer   { grant() }
+
+/* A client of the kl.Ntpd, kl.rump.Dhcpcd, amqp.Consumer, and kl.bc.BlobContainer
+ * class processes is allowed to query a server of the kl.VfsSdCardFs class. */
+request dst = kl.VfsSdCardFs
+{
+    match src = kl.Ntpd             { grant() }
+    match src = kl.rump.Dhcpcd      { grant() }
+    match src = amqp.Consumer       { grant() }
+    match src = kl.bc.BlobContainer { grant() }
+}
+
+/* A client of the kl.Ntpd, kl.rump.Dhcpcd, and amqp.Consumer class
+ * processes is allowed to query a server of the kl.VfsNet class. */
+request dst = kl.VfsNet
+{
+    match src = kl.Ntpd             { grant() }
+    match src = kl.rump.Dhcpcd      { grant() }
+    match src = amqp.Consumer       { grant() }
+}
+
+/* Any server and the KasperskyOS kernel are allowed to respond to
+ * queries of any client. */
+response                            { grant() }
+
+/* Any server and the KasperskyOS kernel are allowed to notify
+ * any client regarding errors that occur when the client queries
+ * the server or the KasperskyOS kernel by calling any method. */
+error                               { grant () }

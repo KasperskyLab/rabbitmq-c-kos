@@ -1,52 +1,44 @@
-# © 2023 AO Kaspersky Lab. All Rights Reserved
+# © 2024 AO Kaspersky Lab
 # Licensed under the MIT License
 
-cmake_minimum_required (VERSION 3.12)
-project (amqp)
+cmake_minimum_required(VERSION 3.25)
+project(amqp)
 
-# Initialize CMake library for Kaspersky OS SDK.
-include (platform)
-initialize_platform ()
+# Initialize CMake library for the KasperskyOS SDK.
+include(platform)
+initialize_platform()
 
-# Connect artifact installation functions.
-include (platform/install)
+# Include the CMake library named install,
+# which contains artifact installation functions.
+include(platform/install)
 
-# Toolchain for work with NK-parser.
-include (platform/nk)
+# Include the CMake library named nk
+# for working with the NK compiler (nk-gen-c).
+include(platform/nk)
 
-# Build edl files
-nk_build_edl_files (publisher_edl_files
-                    NK_MODULE "amqp"
-                    EDL ${CMAKE_CURRENT_SOURCE_DIR}/../resources/edl/Publisher.edl)
+# Attach the vfs package with the VFS component libraries.
+find_package(vfs REQUIRED)
+include_directories(${vfs_INCLUDE})
 
-nk_build_edl_files (multi_vfs_amqp_env
-                    NK_MODULE "amqp"
-                    EDL ${CMAKE_CURRENT_SOURCE_DIR}/../resources/edl/Env.edl)
+# Attach a package with the Dhcpcd program implementation.
+find_package(rump REQUIRED COMPONENTS DHCPCD_ENTITY)
+include_directories(${rump_INCLUDE})
 
-# Attach a package with the virtual file system implementation.
-find_package (vfs REQUIRED)
-include_directories (${vfs_INCLUDE})
+# Attach the vfs package with the VFS component executable files.
+find_package(precompiled_vfs REQUIRED)
+include_directories(${precompiled_vfs_INCLUDE})
 
-# Attach a package with the dhcpcd entity implementation.
-find_package (rump REQUIRED COMPONENTS DHCPCD_ENTITY)
-include_directories (${rump_INCLUDE})
+# Attach the directory with the generated config header files.
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-# Attach a package with VFS entities implementation
-find_package (precompiled_vfs REQUIRED)
-include_directories (${precompiled_vfs_INCLUDE})
+set(RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../resources)
+set(UTILS ${CMAKE_CURRENT_SOURCE_DIR}/../utils)
 
-# Attach the directory with the generated config header files
-include_directories (${CMAKE_CURRENT_BINARY_DIR})
+# Attach the directories with programs.
+include_directories(${RESOURCES}/include)
 
-# Attach the directories with entities.
-include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../resources/include)
+add_subdirectory(publisher)
 
-add_subdirectory (publisher)
-
-if (RUN_TESTS)
-    add_subdirectory (tests)
-endif ()
-
-# Attach the directory with the Einit entity to create a solution image
-# based on Kaspersky OS.
-add_subdirectory (einit)
+# Attach the einit directory containing the KasperskyOS image
+# to the project build.
+add_subdirectory(einit)

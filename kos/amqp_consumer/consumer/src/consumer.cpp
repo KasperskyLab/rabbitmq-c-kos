@@ -1,5 +1,5 @@
 /*
- * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * © 2024 AO Kaspersky Lab
  * Licensed under the MIT License
  */
 
@@ -29,7 +29,9 @@ Consumer::Consumer(const char *hostname, int port)
     m_status = amqp_socket_open(m_socket, hostname, port);
     if (m_status)
     {
-        throw std::runtime_error("Error opening TCP socket");
+        std::string errMsg("Error opening broker connection socket with address: ");
+        errMsg.append(hostname).append(" port: ").append(std::to_string(port));
+        throw std::runtime_error(errMsg);
     }
 
     utils::ThrowOnAmqpError(
@@ -55,7 +57,7 @@ void Consumer::DeclareQueue()
                                     0, 0, 0, 1, amqp_empty_table);
 
     utils::ThrowOnAmqpError(amqp_get_rpc_reply(m_conn), "Declaring queue");
-    
+
     m_queueName = amqp_bytes_malloc_dup(r->queue);
     if (!m_queueName.bytes)
     {
@@ -98,13 +100,13 @@ void Consumer::RecvAndPrintData()
             static_cast<char*>(envelope.exchange.bytes),
             envelope.exchange.len
         };
-        
+
         std::string rKeyBytes{
             static_cast<char*>(envelope.routing_key.bytes),
             envelope.routing_key.len
         };
 
-        std::cout << "Delivery " <<  envelope.delivery_tag << ", exchange: " 
+        std::cout << "Delivery " <<  envelope.delivery_tag << ", exchange: "
                   << exchBytes << ", routingkey: " << rKeyBytes << std::endl;
 
         if (envelope.message.properties._flags & AMQP_BASIC_CONTENT_TYPE_FLAG)

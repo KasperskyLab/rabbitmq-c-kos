@@ -1,4 +1,14 @@
 # Change Log
+
+## Release for KasperskyOS Community Edition SDK 1.2 - 2024-06-26
+- Updated documentation
+- Added shared libs support
+- Changed test directory
+
+## Initial adaptation for KasperskyOS - 2023-07-03
+- Added documentation for KasperskyOS
+- Added Consumer and Publisher examples for KasperskyOS
+
 ## v0.13.0 - 2023-02-05
 ## Fixed
 - Fixed missing option to not install static library (#665)

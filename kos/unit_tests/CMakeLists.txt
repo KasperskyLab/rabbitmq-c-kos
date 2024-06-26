@@ -2,11 +2,12 @@
 # Licensed under the MIT License
 
 cmake_minimum_required(VERSION 3.25)
-project(amqp)
+project(tests)
 
 # Initialize CMake library for the KasperskyOS SDK.
 include(platform)
-initialize_platform()
+# Statically link executable files.
+initialize_platform(FORCE_STATIC)
 
 # Include the CMake library named install,
 # which contains artifact installation functions.
@@ -37,7 +38,7 @@ set(UTILS ${CMAKE_CURRENT_SOURCE_DIR}/../utils)
 # Attach the directories with programs.
 include_directories(${RESOURCES}/include)
 
-add_subdirectory(consumer)
+add_subdirectory(tests)
 
 # Attach the einit directory containing the KasperskyOS image
 # to the project build.

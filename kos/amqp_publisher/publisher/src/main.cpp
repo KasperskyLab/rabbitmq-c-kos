@@ -1,5 +1,5 @@
 /*
- * © 2023 AO Kaspersky Lab. All Rights Reserved
+ * © 2023 AO Kaspersky Lab
  * Licensed under the MIT License
  */
 
