@@ -1,5 +1,5 @@
 /*
- * © 2024 AO Kaspersky Lab
+ * © 2025 AO Kaspersky Lab
  * Licensed under the MIT License
  */
 
@@ -454,7 +454,7 @@ static void testDumpValue(char *out)
     table.num_entries  = 8;
     table.entries      = entries;
 
-    qsort(table.entries, table.num_entries, sizeof(amqp_table_entry_t), &amqp_table_entry_cmp);
+    qsort(table.entries, static_cast<size_t>(table.num_entries), sizeof(amqp_table_entry_t), &amqp_table_entry_cmp);
 
     val.kind        = AMQP_FIELD_KIND_TABLE;
     val.value.table = table;

@@ -18,8 +18,8 @@ private:
     char const             *m_bindingKey = "test";
     int                     m_chanel     = 1;
     amqp_socket_t          *m_socket     = NULL;
+    amqp_bytes_t            m_queueName  = {};
     amqp_connection_state_t m_conn;
-    amqp_bytes_t            m_queueName;
 
 public:
     Consumer(const char *host, int port);

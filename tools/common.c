@@ -1,5 +1,8 @@
 // Copyright 2007 - 2021, Alan Antonuk and the rabbitmq-c contributors.
 // SPDX-License-Identifier: mit
+//
+// © 2025 AO Kaspersky Lab
+// Licensed under the MIT License
 
 #include "common.h"
 #ifdef WITH_SSL
@@ -17,6 +20,11 @@
 #ifdef WINDOWS
 #include "compat.h"
 #endif
+
+/* For when reading auth data from a file */
+#define MAXAUTHTOKENLEN 128
+#define USERNAMEPREFIX "username:"
+#define PASSWORDPREFIX "password:"
 
 void die(const char *fmt, ...) {
   va_list ap;
@@ -125,6 +133,7 @@ static char *amqp_vhost;
 static char *amqp_username;
 static char *amqp_password;
 static int amqp_heartbeat = 0;
+static char *amqp_authfile;
 #ifdef WITH_SSL
 static int amqp_ssl = 0;
 static char *amqp_cacert = "/etc/ssl/certs/cacert.pem";
@@ -147,6 +156,8 @@ struct poptOption connect_options[] = {
      "the password to login with", "password"},
     {"heartbeat", 0, POPT_ARG_INT, &amqp_heartbeat, 0,
      "heartbeat interval, set to 0 to disable", "heartbeat"},
+    {"authfile", 0, POPT_ARG_STRING, &amqp_authfile, 0,
+     "path to file containing username/password for authentication", "file"},
 #ifdef WITH_SSL
     {"ssl", 0, POPT_ARG_NONE, &amqp_ssl, 0, "connect over SSL/TLS", NULL},
     {"cacert", 0, POPT_ARG_STRING, &amqp_cacert, 0,
@@ -157,6 +168,50 @@ struct poptOption connect_options[] = {
      "path to the client certificate file", "cert.pem"},
 #endif /* WITH_SSL */
     {NULL, '\0', 0, NULL, 0, NULL, NULL}};
+
+void read_authfile(const char *path) {
+  size_t n;
+  FILE *fp = NULL;
+  char token[MAXAUTHTOKENLEN];
+
+  if ((amqp_username = malloc(MAXAUTHTOKENLEN)) == NULL ||
+      (amqp_password = malloc(MAXAUTHTOKENLEN)) == NULL) {
+    die("Out of memory");
+  } else if ((fp = fopen(path, "r")) == NULL) {
+    die("Could not read auth data file %s", path);
+  }
+
+  if (fgets(token, MAXAUTHTOKENLEN, fp) == NULL ||
+      strncmp(token, USERNAMEPREFIX, strlen(USERNAMEPREFIX))) {
+    die("Malformed auth file (missing username)");
+  }
+  strncpy(amqp_username, &token[strlen(USERNAMEPREFIX)], MAXAUTHTOKENLEN);
+  /* Missing newline means token was cut off */
+  n = strlen(amqp_username);
+  if (amqp_username[n - 1] != '\n') {
+    die("Username too long");
+  } else {
+    amqp_username[n - 1] = '\0';
+  }
+
+  if (fgets(token, MAXAUTHTOKENLEN, fp) == NULL ||
+      strncmp(token, PASSWORDPREFIX, strlen(PASSWORDPREFIX))) {
+    die("Malformed auth file (missing password)");
+  }
+  strncpy(amqp_password, &token[strlen(PASSWORDPREFIX)], MAXAUTHTOKENLEN);
+  /* Missing newline means token was cut off */
+  n = strlen(amqp_password);
+  if (amqp_password[n - 1] != '\n') {
+    die("Password too long");
+  } else {
+    amqp_password[n - 1] = '\0';
+  }
+
+  (void)fgetc(fp);
+  if (!feof(fp)) {
+    die("Malformed auth file (trailing data)");
+  }
+}
 
 static void init_connection_info(struct amqp_connection_info *ci) {
   ci->user = NULL;
@@ -237,6 +292,8 @@ static void init_connection_info(struct amqp_connection_info *ci) {
   if (amqp_username) {
     if (amqp_url) {
       die("--username and --url options cannot be used at the same time");
+    } else if (amqp_authfile) {
+      die("--username and --authfile options cannot be used at the same time");
     }
 
     ci->user = amqp_username;
@@ -245,8 +302,20 @@ static void init_connection_info(struct amqp_connection_info *ci) {
   if (amqp_password) {
     if (amqp_url) {
       die("--password and --url options cannot be used at the same time");
+    } else if (amqp_authfile) {
+      die("--password and --authfile options cannot be used at the same time");
     }
 
+    ci->password = amqp_password;
+  }
+
+  if (amqp_authfile) {
+    if (amqp_url) {
+      die("--authfile and --url options cannot be used at the same time");
+    }
+
+    read_authfile(amqp_authfile);
+    ci->user = amqp_username;
     ci->password = amqp_password;
   }
 

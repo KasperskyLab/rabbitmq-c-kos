@@ -1,6 +1,8 @@
 // Copyright 2007 - 2021, Alan Antonuk and the rabbitmq-c contributors.
 // SPDX-License-Identifier: mit
+//
 // © 2023 AO Kaspersky Lab
+// Licensed under the MIT License
 
 #include <ctype.h>
 #include <stdarg.h>

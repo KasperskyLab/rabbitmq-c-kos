@@ -13,8 +13,8 @@
 #include "consumer.h"
 
 Consumer::Consumer(const char *hostname, int port)
+    : m_conn{amqp_new_connection()}
 {
-    m_conn = amqp_new_connection();
     if (!m_conn)
     {
         throw std::runtime_error("Allocation error for connection object");

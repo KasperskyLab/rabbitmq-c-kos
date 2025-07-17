@@ -1,4 +1,4 @@
-# © 2024 AO Kaspersky Lab
+# © 2025 AO Kaspersky Lab
 # Licensed under the MIT License
 
 project(einit)
@@ -9,7 +9,7 @@ include(platform/image)
 include(${KL_SDK_ROOT_PATH}/common/build-sd-image.cmake)
 
 # Set the linker and compiler flags.
-project_header_default("STANDARD_GNU_11:YES" "STRICT_WARNINGS:YES")
+project_header_default("STANDARD_GNU_17:YES" "STRICT_WARNINGS:YES")
 
 find_program(NTPD_ENTITY
   NAMES "ntpd" REQUIRED

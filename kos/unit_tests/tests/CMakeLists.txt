@@ -1,7 +1,7 @@
 # © 2024 AO Kaspersky Lab
 # Licensed under the MIT License
 
-project_header_default("STANDARD_GNU_17:YES""STRICT_WARNINGS:YES")
+project_header_default("STANDARD_GNU_17:YES" "STRICT_WARNINGS:YES")
 
 find_package(OpenSSL REQUIRED)
 find_package(GTest REQUIRED NO_CMAKE_PACKAGE_REGISTRY)

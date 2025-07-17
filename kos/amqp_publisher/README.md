@@ -13,10 +13,10 @@ An example of developing a KasperskyOS-based solution that is an implementation 
   - [Getting started](#getting-started)
     - [Prerequisites](#prerequisites)
       - [QEMU](#qemu)
-      - [Raspberry Pi 4 B](#raspberry-pi-4-b)
+      - [Hardware](#hardware)
     - [Building and running the example](#building-and-running-the-example)
       - [QEMU](#qemu-1)
-      - [Raspberry Pi 4 B](#raspberry-pi-4-b-1)
+      - [Hardware](#hardware-1)
       - [CMake input files](#cmake-input-files)
   - [Usage](#usage)
 
@@ -92,14 +92,14 @@ graph LR
 The [`./einit/src/init.yaml.in`](einit/src/init.yaml.in) template is used to automatically generate
 part of the solution initialization description file `init.yaml`. For more information about the
 `init.yaml.in` template file, see the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_cmake_yaml_templates).
+[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=cmake_yaml_templates).
 
 ### Security policy description
 
 The [`./einit/src/security.psl.in`](einit/src/security.psl.in) template is used to automatically
 generate part of the `security.psl` file using CMake tools. The `security.psl` file contains part of
 a solution security policy description. For more information about the `security.psl` file, see
-[Describing a security policy for a KasperskyOS-based solution](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_ssp_descr).
+[Describing a security policy for a KasperskyOS-based solution](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=ssp_descr).
 
 [⬆ Back to Top](#Table-of-contents)
 
@@ -144,7 +144,7 @@ following command:
    $ amqp-consume --server=10.0.2.2 --port=5672 --exchange=amq.direct --routing-key=test cat
    ```
 
-#### Raspberry Pi 4 B
+#### Hardware
 
 1. To install required packages on your host system, run the following command:
    ```
@@ -155,7 +155,7 @@ following command:
    ```
    $ systemctl status rabbitmq-server.service
    ```
-1. To start the AMQP consumer on the host system when running the example on Raspberry Pi 4 B,
+1. To start the AMQP consumer on the host system when running the example on Raspberry Pi 4 B or Radxa ROCK 3A,
 run the following command:
    ```
    $ amqp-consume --server=localhost --port=5672 --exchange=amq.direct --routing-key=test cat
@@ -194,7 +194,7 @@ the installed version of the KasperskyOS Community Edition SDK.
 
 Run the following command `./cross-build.sh <TARGET> [SDK_PATH]`, where:
 
-* `TARGET` can take one of the following values: `qemu` for QEMU or `rpi` for Raspberry Pi 4 B.
+* `TARGET` can take one of the following values: `qemu` for QEMU or `hw` for Raspberry Pi 4 B or Radxa ROCK 3A.
 * `SDK_PATH` specifies the path to the installed version of the KasperskyOS Community Edition SDK.
 If not specified, the path defined in the `SDK_PREFIX` environment variable is used. The value
 specified in `SDK_PATH` option takes precedence over the value of the `SDK_PREFIX` environment variable.
@@ -215,29 +215,30 @@ The `kos-qemu-image` solution image is located in the `./build/einit` directory.
 
 The `cross-build.sh` script both builds the example on QEMU and runs it.
 
-#### Raspberry Pi 4 B
+#### Hardware
 
 Running `cross-build.sh` creates a KasperskyOS-based solution image that includes the example and
-a bootable SD card image for Raspberry Pi 4 B. The `kos-image` solution image is located in the
-`./build/einit` directory. The `rpi4kos.img` bootable SD card image is located in the `./build`
+a bootable SD card image for Raspberry Pi 4 B or Radxa ROCK 3A. The `kos-image` solution image is located in the
+`./build/einit` directory. The `hdd.img` bootable SD card image is located in the `./build`
 directory.
 
 1. To copy the bootable SD card image to the SD card, connect the SD card to the computer and
 run the following command:
 
-   `$ sudo dd bs=64k if=build/rpi4kos.img of=/dev/sd[X] conv=fsync`,
+   `$ sudo dd bs=64k if=build/hdd.img of=/dev/sd[X] conv=fsync`,
 
    where `[X]` is the final character in the name of the SD card block device.
 
-2. Connect the bootable SD card to the Raspberry Pi 4 B.
-3. Supply power to the Raspberry Pi 4 B and wait for the example to run.
+2. Connect the bootable SD card to the Raspberry Pi 4 B or Radxa ROCK 3A.
+3. Supply power to the Raspberry Pi 4 B or Radxa ROCK 3A and wait for the example to run.
 
 You can also use an alternative option to prepare and run the example:
 
-1. Prepare Raspberry Pi 4 B and a bootable SD card to run the example by following the instructions in the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_preparing_sd_card_rpi).
+1. Prepare the required hardware platform and bootable SD card by following the instructions in the KasperskyOS Community Edition Online Help:
+    * [Raspberry Pi 4 B](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=preparing_sd_card_rpi)
+    * [Radxa ROCK 3A](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=preparing_sd_card_radxa)
 1. Run the example by following the instructions in the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_running_sample_programs_rpi)
+[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=running_sample_programs_rpi)
 
 #### CMake input files
 
@@ -267,4 +268,4 @@ After building and running the example, follow these steps:
 
 [⬆ Back to Top](#Table-of-contents)
 
-© 2024 AO Kaspersky Lab
+© 2025 AO Kaspersky Lab

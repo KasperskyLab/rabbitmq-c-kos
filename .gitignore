@@ -68,6 +68,7 @@ tools/doc/man-date.ent
 kos/build
 kos/amqp_consumer/build
 kos/amqp_publisher/build
+kos/unit_tests/build
 
 # Ignore editor swap files
 *~
