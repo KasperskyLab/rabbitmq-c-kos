@@ -1,4 +1,4 @@
-# © 2024 AO Kaspersky Lab
+# © 2025 AO Kaspersky Lab
 # Licensed under the MIT License
 
 cmake_minimum_required(VERSION 3.25)
@@ -15,6 +15,15 @@ include(platform/install)
 # Include the CMake library named nk
 # for working with the NK compiler (nk-gen-c).
 include(platform/nk)
+
+# Detect board.
+if(CMAKE_SYSTEM_SOC STREQUAL "BCM2711")
+  set(BOARD "RPI4_BCM2711")
+elseif(CMAKE_SYSTEM_SOC STREQUAL "RK3568")
+  set(BOARD "RADXA_ROCK_3A")
+else()
+  message(FATAL_ERROR "Unsupported board for SoC '${CMAKE_SYSTEM_SOC}'")
+endif()
 
 # Attach the vfs package with the VFS component libraries.
 find_package(vfs REQUIRED)

@@ -13,9 +13,8 @@ gtests.
   - [Getting started](#getting-started)
     - [Building and running the tests](#building-and-running-the-tests)
       - [QEMU](#qemu)
-      - [Raspberry Pi 4 B](#raspberry-pi-4-b)
+      - [Hardware](#hardware)
       - [CMake input files](#cmake-input-files)
-  - [Usage](#usage)
 
 ## Solution overview
 
@@ -52,14 +51,14 @@ DHCP server in the background and passes them to the virtual file system
 The [`./einit/src/init.yaml.in`](einit/src/init.yaml.in) template is used to automatically generate
 part of the solution initialization description file `init.yaml`. For more information about the
 `init.yaml.in` template file, see the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_cmake_yaml_templates).
+[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=cmake_yaml_templates).
 
 ### Security policy description
 
 The [`./einit/src/security.psl.in`](einit/src/security.psl.in) template is used to automatically
 generate part of the `security.psl` file using CMake tools. The `security.psl` file contains part of
 a solution security policy description. For more information about the `security.psl` file, see
-[Describing a security policy for a KasperskyOS-based solution](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_ssp_descr).
+[Describing a security policy for a KasperskyOS-based solution](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=ssp_descr).
 
 [⬆ Back to Top](#Table-of-contents)
 
@@ -75,7 +74,7 @@ the installed version of the KasperskyOS Community Edition SDK.
 
 Run the following command `./cross-build.sh <TARGET> [SDK_PATH]`, where:
 
-* `TARGET` can take one of the following values: `qemu` for QEMU or `rpi` for Raspberry Pi 4 B.
+* `TARGET` can take one of the following values: `qemu` for QEMU or `hw` for Raspberry Pi 4 B or Radxa Rock 3A.
 * `SDK_PATH` specifies the path to the installed version of the KasperskyOS Community Edition SDK.
 If not specified, the path defined in the `SDK_PREFIX` environment variable is used. The value
 specified in the `SDK_PATH` option takes precedence over the value of the `SDK_PREFIX` environment variable.
@@ -87,29 +86,30 @@ The `kos-qemu-image` solution image is located in the `./build/einit` directory.
 
 The `cross-build.sh` script both builds the tests on QEMU and runs them.
 
-#### Raspberry Pi 4 B
+#### Hardware
 
 Running `cross-build.sh` creates a KasperskyOS-based solution image that includes the tests and
-a bootable SD card image for Raspberry Pi 4 B. The `kos-image` solution image is located in the
-`./build/einit` directory. The `rpi4kos.img` bootable SD card image is located in the `./build`
+a bootable SD card image for the hardware platform. The `kos-image` solution image is located in the
+`./build/einit` directory. The `hdd.img` bootable SD card image is located in the `./build`
 directory.
 
 1. To copy the bootable SD card image to the SD card, connect the SD card to the computer and
 run the following command:
 
-   `$ sudo dd bs=64k if=build/rpi4kos.img of=/dev/sd[X] conv=fsync`,
+   `$ sudo dd bs=64k if=build/hdd.img of=/dev/sd[X] conv=fsync`,
 
    where `[X]` is the final character in the name of the SD card block device.
 
-1. Connect the bootable SD card to the Raspberry Pi 4 B.
-1. Supply power to the Raspberry Pi 4 B and wait for the tests to run.
+1. Connect the bootable SD card to the hardware.
+1. Supply power to the hardware and wait for the example to run.
 
 You can also use an alternative option to prepare and run the tests:
 
-1. Prepare Raspberry Pi 4 B and a bootable SD card to run the tests by following the instructions in the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_preparing_sd_card_rpi).
+1. Prepare the required hardware platform and bootable SD card by following the instructions in the KasperskyOS Community Edition Online Help:
+    * [Raspberry Pi 4 B](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=preparing_sd_card_rpi)
+    * [Radxa ROCK 3A](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=preparing_sd_card_radxa)
 1. Run the tests by following the instructions in the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_running_sample_programs_rpi)
+[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=running_sample_programs_rpi)
 
 #### CMake input files
 
@@ -120,31 +120,6 @@ the solution image.
 
 [./CMakeLists.txt](CMakeLists.txt)—CMake commands for building the solution.
 
-## Usage
-
-Once testing is complete, the results are displayed:
-
-```
-[==========] Running 5 tests from 1 test suite.
-[----------] Global test environment set-up.
-[----------] 5 tests from LibRabbitMQTest
-[ RUN      ] LibRabbitMQTest.ParseUrl
-[       OK ] LibRabbitMQTest.ParseUrl (4 ms)
-[ RUN      ] LibRabbitMQTest.Tables
-[       OK ] LibRabbitMQTest.Tables (8 ms)
-[ RUN      ] LibRabbitMQTest.StatusEnum
-[       OK ] LibRabbitMQTest.StatusEnum (1 ms)
-[ RUN      ] LibRabbitMQTest.SaslMechanism
-[       OK ] LibRabbitMQTest.SaslMechanism (0 ms)
-[ RUN      ] LibRabbitMQTest.MergeCapabilities
-[       OK ] LibRabbitMQTest.MergeCapabilities (2 ms)
-[----------] 5 tests from LibRabbitMQTest (48 ms total)
-
-[----------] Global test environment tear-down
-[==========] 5 tests from 1 test suite ran. (69 ms total)
-[  PASSED  ] 5 tests.
-```
-
 [⬆ Back to Top](#Table-of-contents)
 
-© 2024 AO Kaspersky Lab
+© 2025 AO Kaspersky Lab

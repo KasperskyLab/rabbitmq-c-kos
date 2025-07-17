@@ -1,9 +1,10 @@
-MIT License
+**Rabbitmq-c-kos** is an adapted version of the RabbitMQ C AMQP client library project for use on KasperskyOS.
 
-KasperskyOS modification is
-© 2023 AO Kaspersky Lab
+This software is derived from RabbitMQ C AMQP client library and is licensed under the MIT License.
 
-The original RabbitMQ-C AMQP client library is:
+© 2025 AO Kaspersky Lab.
+
+# RabbitMQ-C AMQP client library license
 
 Copyright (c) 2012-2021 Alan Antonuk
 

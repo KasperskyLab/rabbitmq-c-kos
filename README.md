@@ -13,12 +13,12 @@ an Advanced Message Queuing Protocol (AMQP). For more information about AMQP, se
 [AMQP version 0.9.1](https://www.rabbitmq.com/tutorials/amqp-concepts).
 
 For more information about KasperskyOS, please refer to the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_community_edition).
+[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=community_edition).
 
 This implementation of RabbitMQ-C AMQP client library only supports AMQP version 0.9.1.
 
 Other limitations and known issues are described in the
-[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_limitations_and_known_problems).
+[KasperskyOS Community Edition Online Help](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=limitations_and_known_problems).
 
 ## Table of contents
 - [KasperskyOS modification of RabbitMQ-C AMQP client library](#kasperskyos-modification-of-rabbitmq-c-amqp-client-library)
@@ -36,17 +36,21 @@ Other limitations and known issues are described in the
 
 ### Prerequisites
 
-1. [Install](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_sdk_install_and_remove)
+1. [Install](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=sdk_install_and_remove)
 KasperskyOS Community Edition SDK. You can download the latest version of the KasperskyOS Community
 Edition for free from [os.kaspersky.com](https://os.kaspersky.com/development/). The minimum required
-version of KasperskyOS Community Edition SDK is 1.2. For more information, see
-[System requirements](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_system_requirements).
-1. Copy project source files to your home directory. Examples of KasperskyOS-based solutions are located in the [`./kos`](kos) directory.
+version of KasperskyOS Community Edition SDK is 1.3. For more information, see
+[System requirements](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=system_requirements).
+1. Clone RabbitMQ-C AMQP for KasperskyOS repository to your project directory (to reduce cloning time you can use `--depth 1` option):
+    ```sh
+     $ git clone --recurse-submodules --shallow-submodules https://github.com/KasperskyLab/rabbitmq-c-kos.git
+    ```
+Examples of KasperskyOS-based solutions are located in the [`./kos`](kos) directory.
 
 ## Usage
 
 When you develop a KasperskyOS-based solution, use the
-[recommended structure of project directories](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_cmake_using_sdk_cmake)
+[recommended structure of project directories](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=cmake_using_sdk_cmake)
 to simplify usage of CMake scripts.
 
 To include the RabbitMQ-C AMQP client library in your KasperskyOS-based solution, follow these steps:
@@ -67,7 +71,7 @@ and [`./kos/amqp_publisher/publisher/CMakeLists.txt`](kos/amqp_publisher/publish
 This solution uses the dynamic variant of the RabbitMQ-C AMQP client library. To build a static variant
 of the library, use the `initialize_platform` command with the `FORCE_STATIC` parameter. For additional
 details regarding this command, please refer to the
-[platform library](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.2&customization=KCE_cmake_platform_lib).
+[platform library](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=cmake_platform_lib).
 
 ### Examples
 
@@ -84,9 +88,15 @@ implementation of the AMQP publisher.
 
 Registered trademarks and endpoint marks are the property of their respective owners.
 
+Apple, Mac OS are trademarks of Apple Inc.
+
 GoogleTest is a trademark of Google LLC.
 
+Linux is the registered trademark of Linus Torvalds in the U.S. and other countries.
+
 RabbitMQ® is a trademark of VMware, Inc. in the U.S. and other countries.
+
+Win32, Windows, Windows Server, Windows Vista are trademarks of the Microsoft group of companies.
 
 Raspberry Pi is a trademark of the Raspberry Pi Foundation.
 
@@ -97,8 +107,8 @@ for detailed instructions on code contribution.
 
 ## Licensing
 
-This project is licensed under the terms of the MIT license. See [LICENSE](LICENSE) for more information.
+This project is licensed under the terms of the MIT License. See [LICENSE](LICENSE) for more information.
 
 [⬆ Back to Top](#Table-of-contents)
 
-© 2024 AO Kaspersky Lab
+© 2025 AO Kaspersky Lab

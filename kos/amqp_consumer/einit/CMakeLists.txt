@@ -1,4 +1,4 @@
-# © 2024 AO Kaspersky Lab
+# © 2025 AO Kaspersky Lab
 # Licensed under the MIT License
 
 project(einit)
@@ -9,7 +9,7 @@ include(platform/image)
 include(${KL_SDK_ROOT_PATH}/common/build-sd-image.cmake)
 
 # Set the linker and compiler flags.
-project_header_default("STANDARD_GNU_11:YES" "STRICT_WARNINGS:NO")
+project_header_default("STANDARD_GNU_17:YES" "STRICT_WARNINGS:NO")
 
 find_program(NTPD_ENTITY
   NAMES "ntpd" REQUIRED
@@ -39,6 +39,17 @@ set(QEMU_DEPENDENCIES ${ROOTFS_IMAGE})
 set(FILES ${RESOURCES}/rootfs/etc/hosts)
 
 list(APPEND ENTITIES ${FS_BACKEND})
+
+string(FIND ${SDK_PREFIX} "Radxa" IS_RADXA)
+if((IS_RADXA GREATER_EQUAL 0) AND (NOT(IMAGE MATCHES "sim")))
+  # Set SD Card as root device
+  set(VFS_DEVICE_NAME "mmc1,0")
+
+  string (CONCAT VFS_EXTRA_ENV
+    "    VFS_FILESYSTEM_BACKEND: server:kl.VfsSdCardFs\n"
+    "    ROOTFS: ${VFS_DEVICE_NAME} / fat32 0")
+  set_target_properties (${precompiled_vfsVfsSdCardFs} PROPERTIES EXTRA_ENV ${VFS_EXTRA_ENV})
+endif()
 
 if(PLATFORM_SUPPORTS_DYNAMIC_LINKING)
   set_target_properties(${blob_container_ENTITY} PROPERTIES

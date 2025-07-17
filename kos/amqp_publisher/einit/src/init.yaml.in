@@ -1,4 +1,4 @@
-# © 2023 AO Kaspersky Lab
+# © 2025 AO Kaspersky Lab
 # Licensed under the MIT License
 
 entities:
@@ -30,6 +30,6 @@ entities:
     id: kl.VfsNet
   - target: @ROOTFS_ENTITY@
     id: @ROOTFS_ENTITY@
-@INIT_Ntpd_ENTITY_CONNECTIONS+@
+@INIT_ntpd_ENTITY_CONNECTIONS+@
 
 @INIT_EXTERNAL_ENTITIES@
