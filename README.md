@@ -1,5 +1,8 @@
 # KasperskyOS modification of RabbitMQ-C AMQP client library
 
+> [!IMPORTANT]
+> The project was moved to `KasperskyLab/kos-ce-extra` repository: [rabbitmq example](https://github.com/KasperskyLab/kos-ce-extra/tree/master/examples/rabbitmq).
+
 This version of the [RabbitMQ® C AMQP client library](https://github.com/alanxz/rabbitmq-c) is
 adapted for KasperskyOS. The project is based on a [commit](https://github.com/alanxz/rabbitmq-c/commit/974d71adceae6d742ae20a4c880d99c131f1460a)
 of version 0.13.0 and includes two examples: an AMQP consumer and an AMQP publisher.
@@ -37,9 +40,8 @@ Other limitations and known issues are described in the
 ### Prerequisites
 
 1. [Install](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=sdk_install_and_remove)
-KasperskyOS Community Edition SDK. You can download the latest version of the KasperskyOS Community
-Edition for free from [os.kaspersky.com](https://os.kaspersky.com/development/). The minimum required
-version of KasperskyOS Community Edition SDK is 1.3. For more information, see
+KasperskyOS Community Edition SDK version 1.3. You can download it for free from
+[os.kaspersky.com](https://os.kaspersky.com/development/). For more information, see
 [System requirements](https://click.kaspersky.com/?hl=en-us&link=online_help&pid=kos&version=1.3&customization=KCE&helpid=system_requirements).
 1. Clone RabbitMQ-C AMQP for KasperskyOS repository to your project directory (to reduce cloning time you can use `--depth 1` option):
     ```sh
